@@ -35,9 +35,3 @@ void BusStopIII(){
 		}
 	}
 }
-
-int main(){
-	BusStopIII();
-	return 0;
-}
-
