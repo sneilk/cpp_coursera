@@ -6,6 +6,9 @@
  *
  *  Task:
  *  https://www.coursera.org/learn/c-plus-plus-white/programming/pZwQ4/klass-rational
+ *  https://www.coursera.org/learn/c-plus-plus-white/programming/7p79I/iskliuchieniia-v-klassie-rational
+ *  https://www.coursera.org/learn/c-plus-plus-white/programming/bshor/kal-kuliator-obyknoviennykh-drobiei
+ *
  */
 
 #include <iostream>
@@ -29,29 +32,11 @@ public:
     				(numerator < 0 && denominator < 0)) {
     		p = numerator * -1;
     		q = denominator * -1;
+    	} else if (denominator == 0){
+    		throw invalid_argument("Denominator must not be 0.");
     	} else if (numerator == 0) {
     		p = numerator;
     		q = 1;
-    	}
-    	CutNumbers();
-    }
-
-    void SetNumerator(int num) {
-    	if (num == 0) {
-    		p = num;
-    		q = 1;
-    	} else {
-    		p = num;
-    	}
-    	CutNumbers();
-    }
-
-    void SetDenominator(int denom) {
-    	if (denom > 0) {
-    		q = denom;
-    	} else {
-    		p = -p;
-    		q = -denom;
     	}
     	CutNumbers();
     }
@@ -103,6 +88,9 @@ Rational operator*(const Rational& a, const Rational& b) {
 }
 
 Rational operator/(const Rational& a, const Rational& b) {
+	if (b.Numerator() == 0) {
+		throw domain_error("Divisor must not be 0");
+	}
 	return {a.Numerator() * b.Denominator(),
 			a.Denominator() * b.Numerator()};
 }
@@ -111,7 +99,6 @@ istream& operator>>(istream& in, Rational& number) {
 	char s = '/';
 	int a, b;
 	if (in >> a >> s >> b && s == '/'){
-		cout << a << " " << b << endl;
 		number = {a, b};
 	}
 	return in;
@@ -131,3 +118,26 @@ bool operator<(const Rational& num1, const Rational& num2){
 	return (num1.Numerator() * num2.Denominator() <
 			num2.Numerator() * num1.Denominator());
 }
+
+void Calculator(){
+	char operation;
+	Rational a, b;
+	try {
+		cin >> a >> operation >> b;
+		if (operation == '+') {
+			cout << a + b;
+		} else if (operation == '-') {
+			cout << a - b;
+		} else if (operation == '*') {
+			cout << a * b;
+		} else if (operation == '/') {
+			cout << a / b;
+		}
+	} catch (domain_error& e) {
+		 cout << "Division by zero";
+	} catch (invalid_argument& e) {
+		cout << "Invalid argument";
+	}
+
+}
+
