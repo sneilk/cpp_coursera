@@ -10,6 +10,8 @@
 #include <system_error>
 using namespace std;
 
+string AskTimeServer();
+
 class TimeServer{
 public:
 

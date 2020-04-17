@@ -29,6 +29,9 @@ public:
 			return source_val * value;
 		} else  if (operation == '/'){
 			return source_val / value;
+		} else {
+			cout << "Error: unknow operation!";
+			return 0;	// exception better
 		}
 	}
 
