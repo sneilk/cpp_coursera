@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <sstream>
 #include <vector>
 using namespace std;
 
@@ -20,16 +21,19 @@ public:
 
 	}
 
-	Date(unsigned int new_day, unsigned int new_month, unsigned int new_year){
+	Date(int new_day, int new_month, int new_year){
 		if (new_month < 1 || new_month > 12) {
 			cout << "Month value is invalid: " << new_month << endl;
+
+			// ToDo: use exception
+
 		}
-		int month_len = months_days[new_month - 1];
-		if (new_year % 100 && new_year % 4 == 0 && new_month == 2) {
-			month_len +=1;
-		}
+		int month_len = 31;
 		if ((new_day < 1) || (new_day > month_len)) {
 			cout << "Day value is invalid: " << new_day << endl;
+
+			// ToDo: use exception
+
 		}
 		day = new_day;
 		month = new_month;
@@ -53,8 +57,6 @@ private:
 	int day = 1;
 	int month = 1;
 	int year = 1900;
-	vector<int> months_days = {
-			31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 };
 
 bool operator<(const Date& lhs, const Date& rhs) {
@@ -67,6 +69,34 @@ bool operator<(const Date& lhs, const Date& rhs) {
 	} else {
 		return lhs.GetYear() < rhs.GetYear();
 	}
+}
+
+istream& operator>>(istream& in, Date& date){
+
+	string s, data;
+	int y, m, d;
+	char c1, c2;
+	in >> data;
+	istringstream input(data);
+	char c = input.peek();
+	if (c == '-') {
+		input.ignore(1);
+		input >> y ;
+		y *= -1;
+	} else {
+		input >> y;
+	}
+	input >> c1 >> m >> c2 >> d;
+
+	if (c1 != '-' || c2 != '-') {
+		cout << "Wrond date fomat: " << data;
+
+		// ToDo: use exception
+
+	} else {
+			date = Date(d, m, y);
+	}
+	return in;
 }
 
 
@@ -101,9 +131,6 @@ public:
 
 	void Find(const Date& date) const {
 		if (events.count(date)) {
-			cout << date.GetYear() << '-' <<
-					date.GetMonth() << '-' <<
-					date.GetDay() << " ";
 			for (const auto& i : events.at(date)) {
 				cout << i << " ";
 			}
@@ -136,17 +163,31 @@ void DatabaseInteracrion(){
 
 	  string command;
 	  while (getline(cin, command)) {
+		  istringstream input(command);
+		  if (input) {
+			  input >> command;
+			  if (command == "Add") {
+				  Date d;
+				  string event;
+				  input >> d >> event;
+				  db.AddEvent(d, event);
+			  } else if (command == "Del") {
+				  Date d;
+				  string event;
+				  input >> d >> event;
+				  if (event.size()) {
+					  db.DelEvent(d, event);
+				  } else {
+					  db.DelDate(d);
+				  }
+			  } else if (command == "Find") {
+				  Date d;
+  				  input >> d;
+  				  db.Find(d);
 
-		  // Split command by spaces
-
-		  if (command == "Add") {
-
-		  } else if (command == "Del") {
-
-		  } else if (command == "Find") {
-
-		  } else if (command == "Print") {
-
+			  } else if (command == "Print") {
+				  db.Print();
+			  }
 		  }
 	  }
 }
