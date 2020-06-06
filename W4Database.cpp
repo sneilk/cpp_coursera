@@ -8,15 +8,6 @@
  *  https://www.coursera.org/learn/c-plus-plus-white/programming/sO7Vq/final-naia-zadacha-kursa
  *
  *
- *  Bugs:
- *
- *  1.
- *  inp: Add 1---1-1 5
- *  inp: Add 1-69-42
- *  inp: Add 1---1-1 5
- *  out: Wrong date format
- *  out: Month value is invalid
- *  out: Month value is invalid
  */
 
 
