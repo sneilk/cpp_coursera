@@ -12,13 +12,13 @@
  *
  *  1.
  *  inp: Add 1---1-1 5
- *  out: Wrong date format
  *  inp: Add 1-69-42
- *  out: Month value is invalid
  *  inp: Add 1---1-1 5
+ *  out: Wrong date format
  *  out: Month value is invalid
- *
+ *  out: Month value is invalid
  */
+
 
 #include <algorithm>
 #include <iostream>
@@ -107,15 +107,11 @@ istream& operator>>(istream& in, Date& date){
 	char c1, c2;
 	in >> data;
 	istringstream input(data);
-	input >> y >> c1 >> m >> c2 >> d >> s;
+	input >> y >> c1 >> m >> c2 >> d;
 
-	if (c1 != '-' || c2 != '-' || s != "") {
-//		cout << y << " " << m << " " << d << s << endl;
-//		cout << c1 << " " << c2 << endl;
+	if (c1 != '-' || c2 != '-' || !input || !input.eof()) {
 		throw runtime_error("Wrong date format: " + data);
 	} else {
-//		cout << y << " " << m << " " << d << s << endl;
-//		cout << c1 << " " << c2 << endl;
 		date = Date(d, m, y);
 	}
 	return in;
@@ -192,14 +188,14 @@ void DatabaseInteracrion(){
 	  Database db;
 
 	  string command;
+	  Date d;
+	  string event;
 	  while (getline(cin, command)) {
 		  istringstream input(command);
 		  if (input) {
 			  input >> command;
 
 			  if (command == "Add") {
-				  Date d;
-				  string event;
 				  try {
 					  input >> d >> event;
 					  db.AddEvent(d, event);
@@ -208,11 +204,10 @@ void DatabaseInteracrion(){
 					  cout << ex.what() << endl;
 				  }
 			  } else if (command == "Del") {
-				  Date d;
-				  string event;
 				  try {
-					  input >> d >> event;
-					  if (event.size()) {
+					  input >> d;
+					  if (!input.eof()) {
+						  input >> event;
 						  db.DelEvent(d, event);
 					  } else {
 						  db.DelDate(d);
@@ -223,7 +218,6 @@ void DatabaseInteracrion(){
 				  }
 			  } else if (command == "Find") {
 				  try {
-					  Date d;
 					  input >> d;
 					  db.Find(d);
 				  }
